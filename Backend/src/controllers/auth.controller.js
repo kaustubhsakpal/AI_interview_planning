@@ -1,14 +1,14 @@
-const userModel = require("../models/user.model")
-const bcrypt = require("bcryptjs")
-const jwt = require("jsonwebtoken")
-const tokenBlacklistModel = require("../models/blacklist.model")
+import userModel from "../models/user.model.js"
+import bcrypt from "bcryptjs"
+import  jwt from "jsonwebtoken"
+import  tokenBlacklistModel from "../models/blacklist.model.js"
 
 /**
  * @name registerUserController
  * @description register a new user, expects username, email and password in the request body
  * @access Public
  */
-async function registerUserController(req, res) {
+export async function registerUserController(req, res) {
 
     const { username, email, password } = req.body
 
@@ -62,7 +62,7 @@ async function registerUserController(req, res) {
  * @description login a user, expects email and password in the request body
  * @access Public
  */
-async function loginUserController(req, res) {
+export async function loginUserController(req, res) {
 
     const { email, password } = req.body
 
@@ -105,7 +105,7 @@ async function loginUserController(req, res) {
  * @description clear token from user cookie and add the token in blacklist
  * @access public
  */
-async function logoutUserController(req, res) {
+export async function logoutUserController(req, res) {
     const token = req.cookies.token
 
     if (token) {
@@ -124,7 +124,7 @@ async function logoutUserController(req, res) {
  * @description get the current logged in user details.
  * @access private
  */
-async function getMeController(req, res) {
+export async function getMeController(req, res) {
 
     const user = await userModel.findById(req.user.id)
 
@@ -139,13 +139,4 @@ async function getMeController(req, res) {
         }
     })
 
-}
-
-
-
-module.exports = {
-    registerUserController,
-    loginUserController,
-    logoutUserController,
-    getMeController
 }

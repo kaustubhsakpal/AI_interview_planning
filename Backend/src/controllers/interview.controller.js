@@ -1,6 +1,6 @@
-const pdfParse = require("pdf-parse")
-const { generateInterviewReport, generateResumePdf } = require("../services/ai.service")
-const interviewReportModel = require("../models/interviewReport.model")
+import  {PDFParse} from "pdf-parse"
+import  { generateInterviewReport, generateResumePdf } from "../services/ai.service.js"
+import interviewReportModel  from "../models/interviewReport.model.js"
 
 
 
@@ -8,9 +8,9 @@ const interviewReportModel = require("../models/interviewReport.model")
 /**
  * @description Controller to generate interview report based on user self description, resume and job description.
  */
-async function generateInterViewReportController(req, res) {
+export async function generateInterViewReportController(req, res) {
 
-    const resumeContent = await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText()
+    const resumeContent = await (new PDFParse(Uint8Array.from(req.file.buffer))).getText()
     const { selfDescription, jobDescription } = req.body
 
     const interViewReportByAi = await generateInterviewReport({
@@ -37,7 +37,7 @@ async function generateInterViewReportController(req, res) {
 /**
  * @description Controller to get interview report by interviewId.
  */
-async function getInterviewReportByIdController(req, res) {
+export async function getInterviewReportByIdController(req, res) {
 
     const { interviewId } = req.params
 
@@ -59,7 +59,7 @@ async function getInterviewReportByIdController(req, res) {
 /** 
  * @description Controller to get all interview reports of logged in user.
  */
-async function getAllInterviewReportsController(req, res) {
+export async function getAllInterviewReportsController(req, res) {
     const interviewReports = await interviewReportModel.find({ user: req.user.id }).sort({ createdAt: -1 }).select("-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -skillGaps -preparationPlan")
 
     res.status(200).json({
@@ -72,7 +72,7 @@ async function getAllInterviewReportsController(req, res) {
 /**
  * @description Controller to generate resume PDF based on user self description, resume and job description.
  */
-async function generateResumePdfController(req, res) {
+export async function generateResumePdfController(req, res) {
     const { interviewReportId } = req.params
 
     const interviewReport = await interviewReportModel.findById(interviewReportId)
@@ -94,5 +94,3 @@ async function generateResumePdfController(req, res) {
 
     res.send(pdfBuffer)
 }
-
-module.exports = { generateInterViewReportController, getInterviewReportByIdController, getAllInterviewReportsController, generateResumePdfController }
